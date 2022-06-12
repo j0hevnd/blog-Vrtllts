@@ -37,7 +37,6 @@ class UserController {
             $user->setPassword($_POST['password']);
             $user_login = $user->login();
             
-            var_dump($user_login);
             if ( $user_login && is_object($user_login) ) {
                 $_SESSION['admin'] = $user_login;
                 $result = true;

@@ -1,10 +1,10 @@
 <div class="modal">
     <div class="modal-container" id="modal_container">
-        <div clas1s="nothing">
+        <div class="nothing">
 
             <span id="close" onclick="modalClose()">X</span>
             <h2>Ingresa una nueva entrada</h2>
-            <form action="#" method="POST" enctype="multipart/form-data">
+            <form action="<?=BASE_URL?>article/addArticle" method="POST" enctype="multipart/form-data">
                 <div>
                     <div class="form-grid">
                         <input type="text" name="title" placeholder="Titulo">

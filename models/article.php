@@ -6,10 +6,10 @@ class ArticleModel {
     private $emailUser; 
     private $picture;        
     private $content;
-    private $db;
+    private $conn;
 
     public function __construct() {
-        $this->db = Database::connect();
+        $this->conn = Database::connect();
     }
 
     public function getId(){
@@ -52,5 +52,28 @@ class ArticleModel {
         $this->content=$content;
     }
 
+    /**
+     * Agrega nuevos articulos a la tabla conn, retorna un 
+     * json_encode con el resultado, de éxito o error
+     */
+    public function addArticle() {
+        $result = array();
+        $sql = "INSERT INTO articulos VALUES(NULL, '{$this->getTitle()}', '{$this->getEmailUser()}', ".
+         "'{$this->getPicture()}', '{$this->getContent()}', CURDATE());";
 
+        try {
+            $add = $this->conn->query($sql);
+            $result = array(
+                'result' => $add
+            );
+        } catch (Exception $e) {
+            $result = array(
+                'result' => false,
+                'error' => 'Error: '. $e->getMessage(),
+            ); 
+        }
+
+        $this->conn->close();
+        return json_encode($result);
+    }
 }
