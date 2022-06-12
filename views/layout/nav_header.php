@@ -2,6 +2,11 @@
     <img src="assets/img/logo2501.png" class="main-logo" alt="Imagén logo">
     <div>
         <button class="button" onclick="modalOpen()">Agregar contenido</button>
-        <a href="<?=BASE_URL?>user/index" class="button">Iniciar Sesión</a>
+
+        <?php if (isset($_SESSION['admin'])): ?>
+            <a href="<?=BASE_URL?>user/logout" class="button">Cerrar sesión</a>
+        <?php else: ?>
+            <a href="<?=BASE_URL?>user/index" class="button">Iniciar Sesión</a>
+        <?php endif; ?>
     </div>
 </div>  <!-- block-nav -->

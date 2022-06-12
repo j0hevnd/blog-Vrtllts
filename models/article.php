@@ -1,6 +1,6 @@
 <?php
 
-class Article {
+class ArticleModel {
     private $id;            
     private $title;        
     private $emailUser; 

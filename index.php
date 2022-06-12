@@ -21,7 +21,7 @@ if(isset($_GET['controller'])) {
 } elseif (!isset($_GET['controller']) && !isset($_GET['action'])) {
     $controller = CONTROLLER_DEFAULT;
 } else {
-    show_error();
+    showError404();
     exit(); 
 }
 
@@ -37,11 +37,11 @@ if(class_exists($controller)) {
         $action_default = ACTION_DEFAULT;
         $controller->$action_default();
     } else {
-        show_error();
+        showError404();
     }
     
 } else {
-    show_error();
+    showError404();
 }
 
 require_once 'views/layout/footer.php';

@@ -17,6 +17,7 @@ CREATE TABLE administradores (
     id INT(11) AUTO_INCREMENT NOT NULL,
     email VARCHAR(70) NOT NULL,
     nombre_usuario VARCHAR(50) NOT NULL,
-    password VARCHAR(40) NOT NULL,
-    CONSTRAINT pk_articulos PRIMARY KEY(id)
+    password VARCHAR(255) NOT NULL,
+    CONSTRAINT pk_articulos PRIMARY KEY(id),
+    CONSTRAINT uq_email UNIQUE(email)
 ) ENGINE=InnoDb DEFAULT CHARSET=utf8;
