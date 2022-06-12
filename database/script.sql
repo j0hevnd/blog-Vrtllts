@@ -8,6 +8,7 @@ CREATE TABLE articulos (
     email_usuario VARCHAR(70)  NOT NULL,
     imagen VARCHAR(255)  NOT NULL,
     contenido TEXT NOT NULL,
+    state TINYINT(1) NOT NULL DEFAULT 1,
     fecha DATE NOT NULL,
     CONSTRAINT pk_articulos PRIMARY KEY(id),
     CONSTRAINT uq_email UNIQUE(email_usuario)

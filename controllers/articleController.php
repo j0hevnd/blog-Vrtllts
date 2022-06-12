@@ -7,8 +7,12 @@ class ArticleController {
      * vista de inicio de la pagina
      */
     public function index() {
+        $article = new ArticleModel();
+        $articles = $article->getAllArticles();
+
         require_once 'views/layout/header_main.php';
         require_once 'views/article/article.php';
+
     }
     
     public function addArticle() {
@@ -42,4 +46,5 @@ class ArticleController {
         }
         return header('Location: '.BASE_URL);   
     }
+
 }

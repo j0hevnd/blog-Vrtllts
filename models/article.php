@@ -58,8 +58,9 @@ class ArticleModel {
      */
     public function addArticle() {
         $result = array();
-        $sql = "INSERT INTO articulos VALUES(NULL, '{$this->getTitle()}', '{$this->getEmailUser()}', ".
-         "'{$this->getPicture()}', '{$this->getContent()}', CURDATE());";
+        $sql = "INSERT INTO articulos(titulo, email_usuario, imagen, contenido, fecha) VALUES ".
+               "('{$this->getTitle()}', '{$this->getEmailUser()}', '{$this->getPicture()}', ".
+               "'{$this->getContent()}', CURDATE());";
 
         try {
             $add = $this->conn->query($sql);
@@ -76,4 +77,28 @@ class ArticleModel {
         $this->conn->close();
         return json_encode($result);
     }
+
+    /**
+     * Obtener todos los articulos
+     */
+    public function getAllArticles() {
+        $result = array();
+        $sql = "SELECT * FROM articulos WHERE state = 1 ORDER BY id DESC;";
+
+        try {
+            $add = $this->conn->query($sql);
+            $result = array(
+                'result' => $add
+            );
+        } catch (Exception $e) {
+            $result = array(
+                'result' => false,
+                'error' => 'Error: '. $e->getMessage(),
+            ); 
+        }
+
+        $this->conn->close();
+        return $result;
+    }
+
 }

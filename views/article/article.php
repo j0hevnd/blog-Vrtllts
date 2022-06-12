@@ -1,30 +1,24 @@
 <main class="section-main container">
     <h2 class="title-h2-main">Leé nuestro contenido</h2>
 
-    <article class="container entry-blog">
-        <div class="content-blog">
-            <img src="assets/img/463613.jpg" class="image-article" alt="imagen">
-            <div class="card">
-                <h2 class="title-blog">Titulo del blog</h2>
-                <p class="paragraph-blog">
-                    Lorem, ipsum dolor sit amet consectetur adipisicing elit. Molestias provident
-                    blanditiis repudiandae inventore sint, ab, odit architecto illum deleniti
-                    ipsam commodi delectus pariatur aspernatur tempora, est quasi aliquam autem
-                    reprehenderit!
-                    Lorem, ipsum dolor sit amet consectetur adipisicing elit. Molestias provident
-                    blanditiis repudiandae inventore sint, ab, odit architecto illum deleniti
-                    ipsam commodi delectus pariatur aspernatur tempora, est quasi aliquam autem
-                    reprehenderit!
-                </p>
+    <?php while($article = $articles['result']->fetch_object()): ?>
+        <article class="container entry-blog">
+            <div class="content-blog">
+                <img src="<?=BASE_URL?>uploads/images/<?=$article->imagen?>" class="image-article" alt="imagen">
+                <div class="card">
+                    <h2 class="title-blog"><?=$article->titulo?></h2>
+                    <p class="paragraph-blog"><?= $article->contenido ?></p>
 
-                <p class="date">Publicado: 10/06/2022</p>
+                    <p class="date">Publicado: <?= $article->fecha ?></p>
 
-                <div>
-                    <button onclick="modalOpen()" class="button button_green">Editar</button>
-                    <a href="#" class="button">Elminar</a>
+                    <?php if(isset($_SESSION['admin'])): ?>
+                        <div>
+                            <button onclick="modalOpen()" class="button button_green">Editar</button>
+                            <a href="#" class="button">Elminar</a>
+                        </div>
+                    <?php endif; ?>
                 </div>
             </div>
-        </div>
-    </article><!-- article -->
-
+        </article><!-- article -->
+    <?php endwhile; ?>
 </main> <!-- articles of main content -->
