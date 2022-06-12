@@ -1,6 +1,6 @@
-let title = "Fáciles de leer, contenido interesante";
+let title = "Fácil lectura, contenido interesante            ";
 let siteHeader = document.querySelector('.title-p-entry');
-let maquinaEscribir = str => {
+let typewrite = str => {
     let arrayStr = str.split('');
     let i = 0;
     let printStr = setInterval( function () {     
@@ -13,19 +13,30 @@ let maquinaEscribir = str => {
             i++;
         }
         if (i === arrayStr.length) {
-            clearInterval(printStr);
+            // clearInterval(printStr);
+            siteHeader.innerHTML = '';
             i = 0;
         }
     }, 200);
 }
 
-function start() {
-    setTimeout(function() {
-        maquinaEscribir(title);
-      // Again
-      start();
-      // Every 3 sec
-    }, 7000);
-}
-// Begins
-// start();
+typewrite(title);
+
+// Modal
+
+let modal = document.querySelector('.modal');
+
+function modalOpen() {
+    modal.style.display = 'flex';
+    let scrollModal = window.pageYOffset;
+    if (scrollModal > 100) {
+    window.scrollTo({
+        top:0,
+        behavior: 'smooth'
+    })
+    };
+};
+
+function modalClose() {
+    modal.style.display = 'none';
+};
