@@ -77,6 +77,59 @@ class ArticleModel {
         $this->conn->close();
         return json_encode($result);
     }
+    
+    
+    public function editArticle() {
+        $result = array();
+
+        if (null === $this->getPicture()) {
+            $sql_up = "SELECT imagen FROM articulos WHERE id={$this->getId()};";
+            $image_sql = $this->conn->query($sql_up);
+            $image_sql = $image_sql->fetch_object()->imagen;
+        } else {
+            $image_sql = $this->getPicture();
+        }
+
+
+
+        $sql = "UPDATE articulos SET titulo='{$this->getTitle()}', email_usuario='{$this->getEmailUser()}', ". 
+               "imagen='$image_sql', contenido='{$this->getContent()}', fecha=CURDATE() ". 
+               "WHERE id = {$this->getId()};";
+
+        try {
+            $add = $this->conn->query($sql);
+            $result = array( 'result' => $add );
+
+        } catch (Exception $e) {
+            $result = array(
+                'result' => false,
+                'error' => 'Error: '. $e->getMessage(),
+            ); 
+        }
+
+        $this->conn->close();
+        return json_encode($result);
+    }
+
+    public function getOneArticle($id) {
+        $result = array();
+        $sql = "SELECT * FROM articulos WHERE id=$id;";
+
+        try {
+            $add = $this->conn->query($sql);
+            $result = array(
+                'result' => $add->fetch_object()
+            );
+        } catch (Exception $e) {
+            $result = array(
+                'result' => false,
+                'error' => 'Error: '. $e->getMessage(),
+            ); 
+        }
+
+        $this->conn->close();
+        return $result;
+    }
 
     /**
      * Obtener todos los articulos
@@ -97,7 +150,7 @@ class ArticleModel {
             ); 
         }
 
-        $this->conn->close();
+        // $this->conn->close();
         return $result;
     }
 
