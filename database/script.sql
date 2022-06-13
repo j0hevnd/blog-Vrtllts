@@ -10,8 +10,7 @@ CREATE TABLE articulos (
     contenido TEXT NOT NULL,
     state TINYINT(1) NOT NULL DEFAULT 1,
     fecha DATE NOT NULL,
-    CONSTRAINT pk_articulos PRIMARY KEY(id),
-    CONSTRAINT uq_email UNIQUE(email_usuario)
+    CONSTRAINT pk_articulos PRIMARY KEY(id)
 ) ENGINE=InnoDb DEFAULT CHARSET=utf8;
 
 CREATE TABLE administradores (
