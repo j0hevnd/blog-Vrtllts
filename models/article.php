@@ -33,15 +33,16 @@ class ArticleModel {
     }
     
     public function setId($id){
-        $this->id=$id;
+        $id_art = $this->conn->real_escape_string($id);
+        $this->id = (int) $id_art;
     }
 
     public function setTitle($title){
-        $this->title=$title;
+        $this->title=$this->conn->real_escape_string($title);
     }
 
     public function setEmailUser($emailUser){
-        $this->emailUser=$emailUser;
+        $this->emailUser=$this->conn->real_escape_string($emailUser);
     }
 
     public function setPicture($picture){
@@ -49,7 +50,7 @@ class ArticleModel {
     }
     
     public function setContent($content){
-        $this->content=$content;
+        $this->content=$this->conn->real_escape_string($content);
     }
 
 
@@ -102,15 +103,13 @@ class ArticleModel {
      */
     public function addArticle() {
         $result = array();
-        $sql = "INSERT INTO articulos(titulo, email_usuario, imagen, contenido, fecha) VALUES ".
-               "('{$this->getTitle()}', '{$this->getEmailUser()}', '{$this->getPicture()}', ".
-               "'{$this->getContent()}', CURDATE());";
+        $sql = "INSERT INTO articulos(titulo, email_usuario, imagen, contenido, fecha) VALUES ";
+        $sql .= "('{$this->getTitle()}', '{$this->getEmailUser()}', '{$this->getPicture()}', ";
+        $sql .= "'{$this->getContent()}', CURDATE());";
 
         try {
             $add = $this->conn->query($sql);
-            $result = array(
-                'result' => $add
-            );
+            $result = array( 'result' => $add );
         } catch (Exception $e) {
             $result = array(
                 'result' => false,
@@ -135,9 +134,9 @@ class ArticleModel {
         }
 
         // actualizar articulo
-        $sql = "UPDATE articulos SET titulo='{$this->getTitle()}', email_usuario='{$this->getEmailUser()}', ". 
-               "imagen='$image_sql', contenido='{$this->getContent()}', fecha=CURDATE() ". 
-               "WHERE id = {$this->getId()};";
+        $sql = "UPDATE articulos SET titulo='{$this->getTitle()}', email_usuario='{$this->getEmailUser()}', "; 
+        $sql .= "imagen='$image_sql', contenido='{$this->getContent()}', fecha=CURDATE() ";
+        $sql .= "WHERE id = {$this->getId()};";
 
         try {
             $add = $this->conn->query($sql);
@@ -156,16 +155,17 @@ class ArticleModel {
 
     public function deleteArticle() {
         $result = array();
-        $sql = "DELETE FROM articulos WHERE id = '{$this->id}';";
+        // $sql = "DELETE FROM articulos WHERE id = '{$this->id}';";
+        $sql_delete = "UPDATE articulos SET state=0 WHERE id = '{$this->id}';";
         try {
-            $delete = $this->conn->query($sql);
+            $delete = $this->conn->query($sql_delete);
             $result = $delete;
         } catch (Exception $e) {
-            $result = array(
-                'result' => false,
-                'error' => 'Error: '. $e->getMessage(),
-            ); 
+            $result = false;
+            $error = 'Error: '. $e->getMessage();
         }
+        $this->conn->close();
+        return $result;
     }
 
 }
