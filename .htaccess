@@ -6,5 +6,6 @@ ErrorDocument 404 http://localhost/prueba-virtualLlantas/blog-Vrtllts/error/inde
 RewriteCond %{SCRIPT_FILENAME} !-d 
 RewriteCond %{SCRIPT_FILENAME} !-f
 
-RewriteRule ^(.*)/(.*) index.php?controller=$1&action=$2
+# RewriteRule ^(.*)/(.*)/(.*) index.php?api=$1&controller=$2&action=$3
+RewriteRule ^(.+)$ index.php?url=$1 [QSA,L]
 </IfModule>
