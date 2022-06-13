@@ -30,15 +30,16 @@ class UserModel {
     }
 
     public function setUsername($username){
-        $this->username=$username;
+        $this->username = $this->conn->real_escape_string($username);
     }
 
     public function setEmail($email){
-        $this->email=$email;
+        $email_validate = $this->conn->real_escape_string($email);
+        $this->email = $email_validate;
     }
 
     public function setPassword($password){
-        $this->password=$password;
+        $this->password = $this->conn->real_escape_string($password);
     }
 
     /**
@@ -53,12 +54,10 @@ class UserModel {
         // SQL
         $sql = "SELECT * FROM administradores WHERE email='$email';";
         $login = $this->conn->query($sql);
-
         if($login && $login->num_rows == 1) {
             $user = $login->fetch_object();
-
             $validate = password_verify($password, $user->password);
-            var_dump($validate);
+            
             if ($validate) {
                 $result = $user;
             }

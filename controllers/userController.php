@@ -15,8 +15,9 @@ class UserController {
      * Elimina la sesión de usuario
      */
     public function logout() {
-        $result = false;
+        Utils::isAdmin();
 
+        $result = false;
         if(isset($_SESSION['admin'])) {
             unset($_SESSION['admin']);
         }
@@ -31,15 +32,26 @@ class UserController {
         $result = false;
     
         if(isset($_POST)) {
-            $user = new UserModel();
             
-            $user->setEmail($_POST['email']);
-            $user->setPassword($_POST['password']);
-            $user_login = $user->login();
-            
-            if ( $user_login && is_object($user_login) ) {
-                $_SESSION['admin'] = $user_login;
-                $result = true;
+            $email    = isset($_POST['email'])    ? trim($_POST['email']) : null;
+            $password = isset($_POST['password']) ? trim($_POST['password']) : null;
+            $email_validate = filter_var($email, FILTER_VALIDATE_EMAIL);
+            if ($email_validate && $password) {
+                $user = new UserModel();
+                
+                $user->setEmail($email_validate);
+                $user->setPassword($password);
+                $user_login = $user->login();
+    
+                if ($user_login && is_object($user_login)) {
+                    $_SESSION['admin'] = $user_login;
+                    $result = true;
+                }
+            } else {
+                $result = array(
+                    'login' => false,
+                    'mgs_err' => "Datos de usuario no válidos"
+                );
             }
         }
     

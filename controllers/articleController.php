@@ -11,6 +11,7 @@ class ArticleController {
         $articles = $article->getAllArticles();
 
         if(isset($_GET['edit'])) {
+            Utils::isAdmin();
             $edit = $_GET['edit'];
             $article_edit = $article->getOneArticle($edit)['result'];
         }
@@ -21,11 +22,12 @@ class ArticleController {
     }
     
     public function addArticle() {
+        Utils::isAdmin();
         if (isset($_POST)){
             
-            $title = isset($_POST['title']) ? trim($_POST['title']) : false;
-            $email = isset($_POST['email']) ? trim($_POST['email']) : false;
-            $content = isset($_POST['content']) ? trim($_POST['content']) : false;
+            $title = isset($_POST['title']) ? trim($_POST['title']) : null;
+            $email = isset($_POST['email']) ? trim($_POST['email']) : null;
+            $content = isset($_POST['content']) ? trim($_POST['content']) : null;
 
             if ($title && $email && $content) {
 
@@ -64,6 +66,32 @@ class ArticleController {
             }
         }
         return header('Location: '.BASE_URL);   
+    }
+
+    public function deleteArticle() {
+        Utils::isAdmin();
+        if (isset($_GET['id'])) {
+
+            $id = $_GET['id'];
+            $article = new ArticleModel();
+            $article->setId($id);
+            $article->deleteArticle();
+
+            if ($article) {
+                $result = array(
+                    'delete' => $article,
+                    'msg_delete' => 'Eliminado éxitosamente'
+                );
+            } else {
+                $result = array(
+                    'delele' => $article,
+                    'msg_delete' => 'Ha ocurrido un error'
+                );
+            }
+        }
+
+        return $result;
+        // debe retornar a una página
     }
 
 }

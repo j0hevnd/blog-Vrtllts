@@ -5,6 +5,7 @@ $basename = explode('.', basename($_SERVER['PHP_SELF']))[0];
 require_once 'autoload.php';
 require_once 'config/db.php';
 require_once 'config/params.php';
+require_once 'utils/utils.php';
 
 session_start();
 require_once 'views/layout/doctype.php';

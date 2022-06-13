@@ -14,7 +14,7 @@
                     <?php if(isset($_SESSION['admin'])): ?>
                         <div>
                             <button onclick="modalOpen()" class="button button_green">Editar</button>
-                            <a href="#" class="button">Elminar</a>
+                            <a href="<?=BASE_URL?>article/deleteArticle&id=<?=$article->id?>" class="button">Elminar</a>
                         </div>
                     <?php endif; ?>
                 </div>
