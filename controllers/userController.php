@@ -36,25 +36,34 @@ class UserController {
             $email    = isset($_POST['email'])    ? trim($_POST['email']) : null;
             $password = isset($_POST['password']) ? trim($_POST['password']) : null;
             $email_validate = filter_var($email, FILTER_VALIDATE_EMAIL);
+            
             if ($email_validate && $password) {
                 $user = new UserModel();
                 
                 $user->setEmail($email_validate);
                 $user->setPassword($password);
                 $user_login = $user->login();
-    
+                
                 if ($user_login && is_object($user_login)) {
                     $_SESSION['admin'] = $user_login;
-                    $result = true;
+                    $result = array(
+                        'login' => true,
+                        'mgs' => "Inicio de sesión correcto"
+                    );
+                } else {
+                    $result = array(
+                        'login' => false,
+                        'mgs' => "Datos de usuario no válidos"
+                    );
                 }
             } else {
                 $result = array(
                     'login' => false,
-                    'mgs_err' => "Datos de usuario no válidos"
+                    'mgs' => "Llena todos los campos correctamente"
                 );
             }
         }
-    
-        header('Location: '.BASE_URL);
+        
+        echo json_encode($result);
     }
 }
