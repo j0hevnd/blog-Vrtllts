@@ -60,9 +60,7 @@ class ArticleModel {
 
         try {
             $add = $this->conn->query($sql);
-            $result = array(
-                'result' => $add->fetch_object()
-            );
+            $result = $add->fetch_object();
         } catch (Exception $e) {
             $result = array(
                 'result' => false,
@@ -109,12 +107,10 @@ class ArticleModel {
 
         try {
             $add = $this->conn->query($sql);
-            $result = array( 'result' => $add );
+            $result = $add;
         } catch (Exception $e) {
-            $result = array(
-                'result' => false,
-                'error' => 'Error: '. $e->getMessage(),
-            ); 
+            $result = false;
+            $error ='Error: '. $e->getMessage();
         }
 
         $this->conn->close();
@@ -140,7 +136,7 @@ class ArticleModel {
 
         try {
             $add = $this->conn->query($sql);
-            $result = array( 'result' => $add );
+            $result = $add;
 
         } catch (Exception $e) {
             $result = array(
