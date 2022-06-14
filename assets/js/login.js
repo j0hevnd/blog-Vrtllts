@@ -18,7 +18,7 @@ formLogin.addEventListener('submit', function (e) {
         if (data.login) {
             response.innerHTML = `
                 <div class="alert-succes">
-                ${data.mgs}
+                ${data.msg}
                 </div>
             `;
             setTimeout( () => {
@@ -27,10 +27,9 @@ formLogin.addEventListener('submit', function (e) {
         } else {
             response.innerHTML = `
                 <div class="alert-error">
-                ${data.mgs}
+                ${data.msg}
                 </div>
             `;
         }
-        console.log(data);
     }).catch(console.log)
 });
