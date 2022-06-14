@@ -46,6 +46,7 @@ let modal = document.querySelector('.modal');
 let formModal = document.getElementById('form_modal');
 let buttonEdit = document.querySelectorAll('.button_edit');
 let response_modal = document.getElementById('response_modal');
+let articles_list = document.getElementById('articles_list');
 let title_modal = document.querySelector('.title_modal');
 let button_modal = document.querySelector('.button_modal');
 
@@ -53,6 +54,54 @@ let button_modal = document.querySelector('.button_modal');
 /**
  * Agregar contenido 
  */
+
+function addEntry(data) {
+    response_modal.innerHTML = `
+        <div class="alert-succes">
+            ${data.msg}
+        </div>
+    `;
+
+    // construir etiqueta
+    let new_article = document.createElement('article');
+    new_article.className = "container entry-blog";
+    new_article.id = `entry_blog_${data.article.id}`;
+
+    //  contruir HTML
+    new_article.innerHTML = `
+        <div class="content-blog">
+            <img src="${BASE_URL}uploads/images/${data.article.imagen}" class="image-article" alt="imagen">
+            <div class="card">
+                <h2 class="title-blog">${data.article.titulo}</h2>
+                <p class="paragraph-blog">${data.article.contenido}</p>
+                <p class="date">Publicado: ${data.article.fecha}></p>
+            </div>
+        </div>
+    `;
+
+    // agregar al html
+    articles_list.appendChild(new_article);
+    formModal.reset();  
+}
+
+/**
+ * editar contenido
+ */
+ function editEntry(data) {
+    response_modal.innerHTML = `
+        <div class="alert-succes">
+            Actualizado correctamente
+        </div>
+    `;
+
+    document.querySelector('.image-article').src = `${BASE_URL}uploads/images/${data.editEntry.imagen}`;
+    document.querySelector('.title-blog').innerHTML = data.editEntry.titulo;
+    document.querySelector('.paragraph-blog').innerHTML = data.editEntry.contenido;
+
+    formModal.reset();
+}
+
+
 formModal.addEventListener('submit', function (e) {
     e.preventDefault();
     let modalData = new FormData(formModal);
@@ -63,35 +112,27 @@ formModal.addEventListener('submit', function (e) {
     } else {
         url_send = `${BASE_URL}api/article/addArticle`;
     }
-    console.log(url_send);
-    console.log(modalData);
+
     fetch(url_send, {
         method: 'POST',
         body: modalData
     })
     .then(res => res.json())
     .then((data) => {
-        if (button_modal.value) {  
-            response_modal.innerHTML = `
-            <div class="alert-succes">
-            Actualizado correctamente
-            </div>`;
-            console.log(data);
+        if (button_modal.value) {
+            
+            editEntry(data);
+            
+        } else if (data.article) {
+
+            addEntry(data)
+
         } else {
-            if (data.addArticle) {
-                response_modal.innerHTML = `
-                <div class="alert-succes">
-                ${data.msg}
-                </div>
-            `;
-            } else {
-                response_modal.innerHTML = `
+            response_modal.innerHTML = `
                 <div class="alert-error">
-                ${data.msg}
+                    ${data.msg}
                 </div>
             `;
-            }
-            console.log(data);
         }
 
     }).catch(console.log);
@@ -99,11 +140,12 @@ formModal.addEventListener('submit', function (e) {
 });
 
 
+/**
+ * taer los datos a actualizar, con estos llenamos el modal
+ */
 function findPostById(element){
     let id = element.value;
-    /**
-     * taer los datos a actualizar
-     */
+
     fetch(`${BASE_URL}api/article/find/${id}`, {
         method: 'GET'
     })
@@ -129,16 +171,13 @@ function findPostById(element){
 function deletePostById(element){
     let id = element.value;
     let label = document.getElementById(element.id).parentElement.parentElement.parentElement.parentElement.id;
-    document.getElementById(label).remove();
-    /**
-     * taer los datos a actualizar
-     */
+
     fetch(`${BASE_URL}api/article/deleteArticle&id=${id}`, {
         method: 'POST'
     })
     .then(res => res.json())
     .then((data) => {
-        console.log(data);
+        document.getElementById(label).remove();
     });
     
 }
