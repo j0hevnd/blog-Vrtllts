@@ -86,7 +86,7 @@ class ArticleController {
                 } else {
                     $result = array (
                         'editEntry' => $result,
-                        'msg' => "Actualizada éxitosamente"
+                        'msg' => "Actualizado éxitosamente"
                     );
                 }
 
@@ -141,12 +141,12 @@ class ArticleController {
 
             if (!$result) {
                 $result = array (
-                    'addArticle' => $result,
+                    'article' => $result,
                     'msg' => "Llena todos los campos correctamente"
                 );
             } else {
                 $result = array (
-                    'addArticle' => $result,
+                    'article' => $result,
                     'msg' => "Agregado éxitosamente"
                 );
             }
