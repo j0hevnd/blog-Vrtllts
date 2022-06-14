@@ -22,7 +22,7 @@ function showError404() {
 }
 // showError404();
 
-if (!empty($basename_url) && !in_array('edit', $basename_url)) {
+if (!empty($basename_url)) {
     if (in_array('api', $basename_url)) {
         $get_controller = $basename_url[1];
         $get_action = $basename_url[2];

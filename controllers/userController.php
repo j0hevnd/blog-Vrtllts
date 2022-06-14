@@ -48,18 +48,18 @@ class UserController {
                     $_SESSION['admin'] = $user_login;
                     $result = array(
                         'login' => true,
-                        'mgs' => "Inicio de sesión correcto"
+                        'msg' => "Inicio de sesión correcto"
                     );
                 } else {
                     $result = array(
                         'login' => false,
-                        'mgs' => "Datos de usuario no válidos"
+                        'msg' => "Datos de usuario no válidos"
                     );
                 }
             } else {
                 $result = array(
                     'login' => false,
-                    'mgs' => "Llena todos los campos correctamente"
+                    'msg' => "Llena todos los campos correctamente"
                 );
             }
         }
