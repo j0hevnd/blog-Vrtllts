@@ -72,6 +72,7 @@ class ArticleModel {
         return $result;
     }
 
+
     /**
      * Obtener todos los articulos
      */
@@ -95,6 +96,7 @@ class ArticleModel {
         return $result;
     }
 
+
     /**
      * Agrega nuevos articulos a la tabla conn, retorna un 
      * json_encode con el resultado, de éxito o error
@@ -107,16 +109,23 @@ class ArticleModel {
 
         try {
             $add = $this->conn->query($sql);
-            $result = $add;
+
+            // Obtenemos el elemento ingresado
+            $last_id = "SELECT MAX(id) AS id FROM articulos;";
+            $last_id = $this->conn->query($last_id);
+            $last_id = (int) $last_id->fetch_object()->id; // obtenemos su id y lo convertimos a int
+            $sql_return = $this->getOneArticle($last_id); // obtenemos el ingreso recien hecho a la db
+
+            $result = $sql_return;
         } catch (Exception $e) {
             $result = false;
             $error ='Error: '. $e->getMessage();
         }
 
-        $this->conn->close();
-        return json_encode($result);
+        return $result;
     }
     
+
     public function editArticle() {
         $result = array();
 
@@ -135,9 +144,10 @@ class ArticleModel {
         $sql .= "WHERE id = {$this->getId()};";
 
         try {
-            $add = $this->conn->query($sql);
-            $result = $add;
+            $this->conn->query($sql);
 
+            // obtener articulo actualizado
+            $result  = $this->getOneArticle($this->getId());
         } catch (Exception $e) {
             $result = array(
                 'result' => false,
@@ -145,9 +155,9 @@ class ArticleModel {
             ); 
         }
 
-        $this->conn->close();
-        return json_encode($result);
+        return $result;
     }
+
 
     public function deleteArticle() {
         $result = array();
