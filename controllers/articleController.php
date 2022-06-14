@@ -10,21 +10,31 @@ class ArticleController {
         $article = new ArticleModel();
         $articles = $article->getAllArticles();
 
-        if(isset($_GET['edit'])) {
-            Utils::isAdmin();
-            $edit = $_GET['edit'];
-            $article_edit = $article->getOneArticle($edit)['result'];
-        }
-
         require_once 'views/layout/header_main.php';
         require_once 'views/article/article.php';
-
+        
     }
     
-    public function addArticle() {
+    public function find() {
         Utils::isAdmin();
-        if (isset($_POST)){
-            $result = true;
+        $url = explode('/', $_GET['url']);
+        $id = (int) end($url);
+        if(isset($id)) {
+            $article = new ArticleModel();
+            $response = $article->getOneArticle($id);
+        } else {
+            $response = array(
+                'msg' => "Error al obtener los datos"
+            );
+        }
+
+        echo json_encode($response);
+    }
+
+    public function edit() {
+        Utils::isAdmin();
+        if(isset($_POST)) {
+            $result = false;
 
             $title = isset($_POST['title']) ? trim($_POST['title']) : null;
             $email = isset($_POST['email']) ? trim($_POST['email']) : null;
@@ -32,14 +42,78 @@ class ArticleController {
             $email_validate = filter_var($email, FILTER_VALIDATE_EMAIL);
 
             if ($title && $email_validate && $content) {
+                $result = true;
+                $article = new ArticleModel();
+                
+                $article->setTitle($title);
+                $article->setEmailUser($email_validate);
+                $article->setContent($content);
+                
+                
+                // Validamos si nos han enviado la imagén
+                if (isset($_FILES['image']) && $_FILES['image']['name']) {
+                    $file = $_FILES['image'];
+                    $filename = $file['name'];
+                    $mimetype = $file['type'];
+                    
+                    if($mimetype == "image/jpg" || $mimetype == 'image/jpeg' || $mimetype == 'image/png'){
+                        
+                        if(!is_dir('uploads/images')){
+                            mkdir('uploads/images', 0777, true);
+                        }
+                        
+                        $article->setPicture($filename);
+                        move_uploaded_file($file['tmp_name'], 'uploads/images/'.$filename);
+                    }
+                }
 
+                
+                // obtenemos el id de la url
+                $url = explode('/', $_GET['url']);
+                $id = (int) end($url);
+                if(isset($id)) {                    
+                    $article->setId($id);
+                    $result = $article->editArticle();
+                } else {
+                    $result = false;
+                }
+
+                if (!$result) {
+                    $result = array (
+                        'editEntry' => $result,
+                        'msg' => "Llena todos los campos correctamente"
+                    );
+                } else {
+                    $result = array (
+                        'editEntry' => $result,
+                        'msg' => "Actualizada éxitosamente"
+                    );
+                }
+
+            } // validates
+
+            echo json_encode($result);
+        } // POST
+    } // editArticle
+
+    public function addArticle() {
+        if (isset($_POST)){
+            $result = false;
+
+            $title = isset($_POST['title']) ? trim($_POST['title']) : null;
+            $email = isset($_POST['email']) ? trim($_POST['email']) : null;
+            $content = isset($_POST['content']) ? trim($_POST['content']) : null;
+            $email_validate = filter_var($email, FILTER_VALIDATE_EMAIL);
+
+            if ($title && $email_validate && $content) {
+                $result = true;
                 $article = new ArticleModel();
                 
                 $article->setTitle($_POST['title']);
                 $article->setEmailUser($_POST['email']);
                 $article->setContent($_POST['content']);
-
-
+                
+                
                 // Validamos si nos han enviado la imagén
                 if (isset($_FILES['image']) && $_FILES['image']['name']) {
                     $file = $_FILES['image'];
@@ -60,39 +134,38 @@ class ArticleController {
                 }
                 
                 if ($result) {
-                    // Validamos si lo que se quiere es editar el articulo
-                    if (isset($_GET['id'])) {
-                        $id = $_GET['id'];
-                        $article->setId($id);
-                        
-                        $update= $article->editArticle();
-                    } else {
-                        $article = $article->addArticle();
-                    }
+                    $result = $article->addArticle();
                 }
 
-            } else {
-                $result = array (
-                    'addArticle' => false,
-                    'msg_error' => "Llena todos los campos correctamente"
-                );
             }
 
+            if (!$result) {
+                $result = array (
+                    'addArticle' => $result,
+                    'msg' => "Llena todos los campos correctamente"
+                );
+            } else {
+                $result = array (
+                    'addArticle' => $result,
+                    'msg' => "Agregado éxitosamente"
+                );
+            }
+            
             echo json_encode($result);
-        }
-        
-        return header('Location: '.BASE_URL);
+
+        } // POST        
+        // return header('Location: '.BASE_URL);
     }
 
     public function deleteArticle() {
         Utils::isAdmin();
+        $result = [];
         if (isset($_GET['id'])) {
 
             $id = $_GET['id'];
             $article = new ArticleModel();
             $article->setId($id);
             $delete = $article->deleteArticle();
-
             if ($delete) {
                 $result = array(
                     'delete' => $delete,
