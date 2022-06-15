@@ -55,6 +55,13 @@ let button_modal = document.querySelector('.button_modal');
  * Agregar contenido 
  */
 
+function openAdd() {
+    button_modal.setAttribute('value', 'add');
+    document.querySelector('.title_modal').innerHTML = 'Ingresa una nueva entrada';
+    formModal.reset();
+    openModal()
+}
+
 function addEntry(data) {
     response_modal.innerHTML = `
         <div class="alert-succes">
@@ -110,7 +117,7 @@ formModal.addEventListener('submit', function (e) {
     let modalData = new FormData(formModal);
     let url_send = '';
 
-    if (button_modal.value) {
+    if (!isNaN(button_modal.value)) {
         url_send = `${BASE_URL}api/article/edit/${button_modal.value}`;
     } else {
         url_send = `${BASE_URL}api/article/addArticle`;
