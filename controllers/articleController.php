@@ -37,22 +37,14 @@ class ArticleController {
     public function edit() {
         Utils::isAdmin();
         if(isset($_POST)) {
-            // funcionalidad para recaptcha
-            require_once "utils/recaptchalib.php";   
-            $secret = "6LcLyG4gAAAAAFF89il9ho3gG6e2lCvV-QwbB62w";
-            $response = null;
-            // Verificamos la clave secreta
-            $reCaptcha = new ReCaptcha($secret);
-            if ($_POST["g-recaptcha-response"]) {
-                $response = $reCaptcha->verifyResponse(
-                    $_SERVER["REMOTE_ADDR"],
-                    $_POST["g-recaptcha-response"]
-                );
-            }
-
-            if ($response != null && $response->success) {
+           
+            $recaptcha_url = 'https://www.google.com/recaptcha/api/siteverify'; 
+            $recaptcha_secret = '6LfJIm8gAAAAAHPl2QgdLO271OonQyC23rchId6f'; 
+            $recaptcha_response = $_POST['recaptcha_response']; 
+            $recaptcha = file_get_contents($recaptcha_url . '?secret=' . $recaptcha_secret . '&response=' . $recaptcha_response); 
+            $recaptcha = json_decode($recaptcha); 
+            if(isset($recaptcha->score) && $recaptcha->score >= 0.7){
                 // Añade aquí el código que desees en el caso de que la validación sea correcta
-
                 // Valida los datos que nos llegan por post
                 if ($article = Utils::validateInputs($_POST)) {
 
@@ -89,47 +81,41 @@ class ArticleController {
                     );
                 }
 
-            } else {
-                // Añade aquí el código que desees en el caso de que la validación no sea correcta o muestra
+            }else{
+                // Añade aquí el código que desees en el caso de que la validación no sea correcta
                 $result = array (
-                    'editEntry' => $response,
-                    'msg' => "No válido"
-                );
+                    'editEntry' => NULL,
+                    'msg' => "No válido, fallo en el captcha"
+                );  
             }
 
             echo json_encode($result);
         } // POST
     } // editArticle
 
+
     public function addArticle() {
         if (isset($_POST)){
-            // funcionalidad para recaptcha
-            require_once "utils/recaptchalib.php";   
-            $secret = "6LcLyG4gAAAAAFF89il9ho3gG6e2lCvV-QwbB62w";
-            $response = null;
-            // Verificamos la clave secreta
-            $reCaptcha = new ReCaptcha($secret);
-            if ($_POST["g-recaptcha-response"]) {
-                $response = $reCaptcha->verifyResponse(
-                $_SERVER["REMOTE_ADDR"],
-                $_POST["g-recaptcha-response"]
-                );
-            }
-            
-            if ($response != null && $response->success) {
+
+            $recaptcha_url = 'https://www.google.com/recaptcha/api/siteverify'; 
+            $recaptcha_secret = '6LfJIm8gAAAAAHPl2QgdLO271OonQyC23rchId6f'; 
+            $recaptcha_response = $_POST['recaptcha_response']; 
+            $recaptcha = file_get_contents($recaptcha_url . '?secret=' . $recaptcha_secret . '&response=' . $recaptcha_response); 
+            $recaptcha = json_decode($recaptcha); 
+            if(isset($recaptcha->score) && $recaptcha->score >= 0.7){
                 // Añade aquí el código que desees en el caso de que la validación sea correcta
-                
+                $result = false;
                 // valida los campos que nos llegan por POST
                 $class_result = Utils::validateInputs($_POST);
 
                 // Validamos si nos han enviado la imagén
                 if (isset($_FILES['image']) && $_FILES['image']['name']) {
-                    $result = Utils::validateImage($class_result['class'], $_FILES);
+                    $result = Utils::validateImage($class_result, $_FILES);
                 }
 
                 // guardamos la entrada en la db, en caso contrario retorna false
                 if ($result) {
-                    $result = $class_result['class']->addArticle();
+                    $result = $class_result->addArticle();
                 }            
 
                 if (!$result) {
@@ -143,13 +129,19 @@ class ArticleController {
                         'article' => $result,
                         'msg' => "Agregado éxitosamente"
                     );
+
+                    if (isset($_SESSION['admin'])) {
+                        $result['sesion'] = true;
+                    } else {
+                        $result['sesion'] = false;
+                    }
                 }
 
-            } else {
-               // Añade aquí el código que desees en el caso de que la validación no sea correcta o muestra
+            }else{
+                // Añade aquí el código que desees en el caso de que la validación no sea correcta
                 $result = array (
-                    'article' => $response,
-                    'msg' => "No válido"
+                    'article' => NULL,
+                    'msg' => "No válido, fallo en el captcha"
                 );
             }
 

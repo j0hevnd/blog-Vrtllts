@@ -7,7 +7,7 @@
                 <h2 style="font-size: 2rem; color: white; font-family: Helvetica; padding: 1.5rem">Iniciar sesión</h2>
                 <input type="email" name="email" id="email" placeholder="Correo electrónico">
                 <input type="password" name="password" id="password" placeholder="Contraseña">
-                <button class="button">Inicar Sesión</button>
+                <button class="button">Iniciar Sesión</button>
             </form>
             <div id="response"></div>
         </div> <!-- form -->
