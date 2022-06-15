@@ -1,4 +1,4 @@
-let title = "Fácil lectura, contenido interesante            ";
+let title_hero = "Fácil lectura, contenido interesante            ";
 let siteHeader = document.querySelector('.title-p-entry');
 let typewrite = str => {
     let arrayStr = str.split('');
@@ -20,7 +20,7 @@ let typewrite = str => {
     }, 200);
 }
 
-typewrite(title);
+typewrite(title_hero);
 
 // Modal
 
@@ -45,30 +45,71 @@ const BASE_URL = 'http://localhost/prueba-virtualLlantas/blog-Vrtllts/';
 let modal = document.querySelector('.modal');
 let formModal = document.getElementById('form_modal');
 let buttonEdit = document.querySelectorAll('.button_edit');
-let response_modal = document.getElementById('response_modal');
+let response_modal = document.getElementById('response');
 let articles_list = document.getElementById('articles_list');
 let title_modal = document.querySelector('.title_modal');
 let button_modal = document.querySelector('.button_modal');
 
 
-/**
- * Agregar contenido 
- */
-
+// utilidades
 function openAdd() {
     button_modal.setAttribute('value', 'add');
     document.querySelector('.title_modal').innerHTML = 'Ingresa una nueva entrada';
+    button_modal.innerHTML = 'Agregar';
     formModal.reset();
-    openModal()
+    openModal();
 }
 
+/**
+ * validación básica de los campos 
+ */
+function validateInputs() {
+    let flag = true;
+    let title_input = document.getElementById('title');
+    let email_input = document.getElementById('email');
+    let image_file  = document.getElementById('image');
+    let content_input = document.getElementById('content');
+    emailRegex = /^(.+)@(.+)\.(.+){1,3}$/;
+    
+    if (!title_input.value.trim || title_input.value == '') {
+        title_input.style.boxShadow = 'rgba(253, 0, 0, 0.8) 2px 1px 4px 1px';
+        flag = false;
+    } else {
+        title_input.style.removeProperty('box-shadow');
+    }
+    if (!emailRegex.test(email_input.value) || !email_input.value.trim || email_input.value == '') {
+        email_input.style.boxShadow = 'rgba(253, 0, 0, 0.8) 2px 1px 4px 1px';
+        flag = false;
+    } else {
+        email_input.style.removeProperty('box-shadow');
+    }
+    if (!image_file.value.trim || image_file.value == '') {
+        image_file.style.boxShadow = 'rgba(253, 0, 0, 0.8) 2px 1px 4px 1px';
+        flag = false;
+    } else {
+        image_file.style.removeProperty('box-shadow');
+    }
+    if (!content_input.value.trim || content_input.value == '') {
+        content_input.style.boxShadow = 'rgba(253, 0, 0, 0.8) 2px 1px 4px 1px';
+        flag = false;
+    } else {
+        content_input.style.removeProperty('box-shadow');
+    }
+
+    return flag;
+}
+
+
+/**
+ * Agregar contenido 
+ */
 function addEntry(data) {
     response_modal.innerHTML = `
         <div class="alert-succes">
             ${data.msg}
         </div>
     `;
-    if (data.editEntry instanceof Object) {
+    if (data.article instanceof Object) {
         // construir etiqueta
         let new_article = document.createElement('article');
         new_article.className = "container entry-blog";
@@ -85,6 +126,14 @@ function addEntry(data) {
                 </div>
             </div>
         `;
+        if (data.sesion) {
+            // let buttons_html = document.createElement('div');
+            buttons_html = `<div>
+            <button type="button" class="button_edit button button_green" onclick="findPostById(this)" value="${data.article.id}">Editar</button>
+            <button type="button" class="button_delete button button_red" id="button_delete_${data.article.id}" onclick="deletePostById(this)" value="${data.article.id}">Eliminar</button>
+            </div>`;
+            new_article.innerHTML += `${buttons_html} </div>`;
+        }
 
         // agregar al html
         articles_list.appendChild(new_article);
@@ -117,35 +166,44 @@ formModal.addEventListener('submit', function (e) {
     let modalData = new FormData(formModal);
     let url_send = '';
 
-    if (!isNaN(button_modal.value)) {
-        url_send = `${BASE_URL}api/article/edit/${button_modal.value}`;
-    } else {
-        url_send = `${BASE_URL}api/article/addArticle`;
-    }
+    if (validateInputs()){
 
-    fetch(url_send, {
-        method: 'POST',
-        body: modalData
-    })
-    .then(res => res.json())
-    .then((data) => {
-        if (button_modal.value) {
-            
-            editEntry(data);
-            
-        } else if (data.article) {
-
-            addEntry(data)
-
+        if (!isNaN(button_modal.value)) {
+            url_send = `${BASE_URL}api/article/edit/${button_modal.value}`;
         } else {
-            response_modal.innerHTML = `
-                <div class="alert-error">
-                    ${data.msg}
-                </div>
-            `;
+            url_send = `${BASE_URL}api/article/addArticle`;
         }
 
-    }).catch(console.log);
+        fetch(url_send, {
+            method: 'POST',
+            body: modalData
+        })
+        .then(res => res.json())
+        .then((data) => {
+            if (!isNaN(button_modal.value)) {
+                
+                editEntry(data);
+                
+            } else if (data.article) {
+
+                addEntry(data)
+
+            } else {
+                response_modal.innerHTML = `
+                    <div class="alert-error">
+                        ${data.msg}
+                    </div>
+                `;
+            }
+
+        }).catch(console.log);
+    } else {
+        response_modal.innerHTML = `
+            <div class="alert-error">
+                ${'Llena los campos correctamente'}
+            </div>
+        `;
+    }
 
 });
 
