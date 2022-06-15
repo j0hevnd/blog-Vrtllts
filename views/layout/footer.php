@@ -1,4 +1,4 @@
-    <footer>
+    <footer id="footer_id">
         Blog de desarrollo web Esteban García | Todos los derechos reservados &copy;
     </footer>
 

@@ -1,5 +1,6 @@
 let title_hero = "Fácil lectura, contenido interesante            ";
 let siteHeader = document.querySelector('.title-p-entry');
+console.log(siteHeader);
 let typewrite = str => {
     let arrayStr = str.split('');
     let i = 0;
@@ -8,9 +9,9 @@ let typewrite = str => {
             siteHeader.innerHTML += arrayStr[i];
             siteHeader.innerHTML += arrayStr[i + 1];
             i += 2
-        } else {
-            siteHeader.innerHTML += arrayStr[i];
-            i++;
+        } else if (siteHeader) {
+                siteHeader.innerHTML += arrayStr[i];
+                i++;
         }
         if (i === arrayStr.length) {
             // clearInterval(printStr);
@@ -26,6 +27,8 @@ typewrite(title_hero);
 const BASE_URL = 'http://localhost/prueba-virtualLlantas/blog-Vrtllts/';
 let buttonEdit = document.querySelectorAll('.button_edit');
 let articles_list = document.getElementById('articles_list');
+let footer = document.getElementById('footer_id');
+let div = document.getElementById('error404');
 // modal
 let modal = document.querySelector('.modal');
 let formModal = document.getElementById('form_modal');
@@ -40,6 +43,11 @@ let content_input = document.getElementById('content');
 
 
 // utilidades
+
+// pagina de error
+if (div) {
+    div.style.height= `${window.innerHeight - footer.clientHeight}px`;
+}
 
 // Modal
 
