@@ -21,3 +21,4 @@ CREATE TABLE administradores (
     CONSTRAINT pk_articulos PRIMARY KEY(id),
     CONSTRAINT uq_email UNIQUE(email)
 ) ENGINE=InnoDb DEFAULT CHARSET=utf8;
+
