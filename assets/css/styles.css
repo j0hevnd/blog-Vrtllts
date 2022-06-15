@@ -142,6 +142,19 @@ ul {
     grid-gap: 3%;
 }
 
+.empty-article {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background-color: #39a4e3;
+    font-size: 2.7rem;
+    color: white;
+    padding: 2rem;
+    margin: 3rem auto;
+    border-radius: 7px;
+    box-shadow: 0px 2px 5px 0px rgb(0, 76, 255);    
+}
+
 /** input forms **/
 input:not([type="submit"]),
 textarea {

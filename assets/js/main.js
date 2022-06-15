@@ -220,7 +220,7 @@ formModal.addEventListener('submit', function (e) {
     }
 
     setTimeout( () => {
-        response_modal.remove();
+        response_modal.innerHTML = "";
     }, 4000);
 
 });
