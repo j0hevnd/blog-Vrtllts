@@ -1,7 +1,7 @@
 <main class="section-main container">
     <h2 class="title-h2-main">Leé nuestro contenido</h2>
 
-    <?php while($article = $articles['result']->fetch_object()): ?>
+    <?php while($article = $articles->fetch_object()): ?>
         <div id="articles_list">
             <article class="container entry-blog" id="entry_blog_<?=$article->id?>">
                 <div class="content-blog">

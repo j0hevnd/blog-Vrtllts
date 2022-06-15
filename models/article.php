@@ -62,10 +62,8 @@ class ArticleModel {
             $add = $this->conn->query($sql);
             $result = $add->fetch_object();
         } catch (Exception $e) {
-            $result = array(
-                'result' => false,
-                'error' => 'Error: '. $e->getMessage(),
-            ); 
+            $result = false;
+            $error = 'Error: '. $e->getMessage(); 
         }
 
         $this->conn->close();
@@ -82,14 +80,10 @@ class ArticleModel {
 
         try {
             $add = $this->conn->query($sql);
-            $result = array(
-                'result' => $add
-            );
+            $result = $add;
         } catch (Exception $e) {
-            $result = array(
-                'result' => false,
-                'error' => 'Error: '. $e->getMessage(),
-            ); 
+            $result = false;
+            $error = 'Error: '. $e->getMessage(); 
         }
 
         // $this->conn->close();
@@ -149,10 +143,8 @@ class ArticleModel {
             // obtener articulo actualizado
             $result  = $this->getOneArticle($this->getId());
         } catch (Exception $e) {
-            $result = array(
-                'result' => false,
-                'error' => 'Error: '. $e->getMessage(),
-            ); 
+            $result = false;
+            $error='Error: '. $e->getMessage();
         }
 
         return $result;
