@@ -67,20 +67,38 @@ class UserModel {
     }
     
     /**
-     * implementa la creación de un usuario,  FUNCION DE UN ÚNICO USO
+     * implementa la creación de un usuario,
      * Descomentar para crear al usuario administrador
      */
 
-    // public function createUserAdmin() {
-    //     $password = password_hash('admin12345', PASSWORD_BCRYPT, ['cost' => 4]);
-    //     try {
-    //         $sql = "INSERT INTO administradores VALUES (NULL, 'admin@admin.com', 'admin', '$password');";
-    //         $rtur = $this->conn->query($sql);
-    //         echo "agregado exitosamente!!";
-    //     } catch (Exception $e) {
-    //         // $this->conn->error
-    //         $error =  "Error al agregar ". $e->getMessage();
-    //     }
-    // }
+    public function createUserAdmin() {
+        try {
+            $exist = false;
+            $email_admin = 'admin@admin.com';
+            $pass = 'admin12345';
+            $msg = '';
+
+            $sql = "SELECT email FROM administradores WHERE email='$email_admin';";
+            $query = $this->conn->query($sql);
+            while ($email = $query->fetch_object()) {
+                if ($email->email === $email_admin){
+                    $exist = true;
+                    $msg_err = "Ya existe el usuario";
+                    return;
+                }
+            }
+
+            if (!$exist) {
+                $password = password_hash($pass, PASSWORD_BCRYPT, ['cost' => 4]);
+                $sql_admin = "INSERT INTO administradores VALUES (NULL, '$email_admin', 'admin', '$password');";
+                $this->conn->query($sql_admin);
+                echo "Administrador creado. -" . ' email: '.$email_admin.',  Contraseña: '.$pass ;
+            }
+
+        } catch (Exception $e) {
+            // $this->conn->error
+            $msg_err =  "Error al agregar ". $e->getMessage();
+        }
+    }
 
 }

@@ -8,6 +8,9 @@ class UserController {
      * Obtenemos la vista donde iniciaremos sesión
      */
     public function index() {
+        // DESCOMENTAR PARA CREAR AL USUARIO ADMINISTRADOR
+        // $user_admin = new UserModel();
+        // $user_admin->createUserAdmin();
         include_once 'views/user/login.php';
     }
 
