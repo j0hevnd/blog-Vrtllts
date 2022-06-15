@@ -63,7 +63,7 @@ function openAdd() {
 /**
  * validación básica de los campos 
  */
-function validateInputs() {
+function validateInputs(url_edit) {
     let flag = true;
     let title_input = document.getElementById('title');
     let email_input = document.getElementById('email');
@@ -83,7 +83,7 @@ function validateInputs() {
     } else {
         email_input.style.removeProperty('box-shadow');
     }
-    if (!image_file.value.trim || image_file.value == '') {
+    if (!image_file.value.trim || image_file.value == '' && !url_edit) {
         image_file.style.boxShadow = 'rgba(253, 0, 0, 0.8) 2px 1px 4px 1px';
         flag = false;
     } else {
@@ -116,27 +116,37 @@ function addEntry(data) {
         new_article.id = `entry_blog_${data.article.id}`;
 
         //  contruir HTML
-        new_article.innerHTML = `
+ 
+        if (data.sesion) {
+            new_article.innerHTML = `
             <div class="content-blog">
                 <img src="${BASE_URL}uploads/images/${data.article.imagen}" class="image-article" alt="imagen">
-                <div class="card">
+                <div id="card" class="card">
+                    <h2 class="title-blog">${data.article.titulo}</h2>
+                    <p class="paragraph-blog">${data.article.contenido}</p>
+                    <p class="date">Publicado: ${data.article.fecha}</p>
+                    <div>
+                        <button type="button" class="button_edit button button_green" onclick="findPostById(this)" value="${data.article.id}">Editar</button>
+                        <button type="button" class="button_delete button button_red" id="button_delete_${data.article.id}" onclick="deletePostById(this)" value="${data.article.id}">Eliminar</button>
+                        <p class="date">Usuario: ${data.article.email_usuario}</p>
+                    </div>
+                </div>
+            </div>`;
+            
+        } else {
+            new_article.innerHTML = `
+            <div class="content-blog">
+                <img src="${BASE_URL}uploads/images/${data.article.imagen}" class="image-article" alt="imagen">
+                <div id="card" class="card">
                     <h2 class="title-blog">${data.article.titulo}</h2>
                     <p class="paragraph-blog">${data.article.contenido}</p>
                     <p class="date">Publicado: ${data.article.fecha}></p>
                 </div>
-            </div>
-        `;
-        if (data.sesion) {
-            // let buttons_html = document.createElement('div');
-            buttons_html = `<div>
-            <button type="button" class="button_edit button button_green" onclick="findPostById(this)" value="${data.article.id}">Editar</button>
-            <button type="button" class="button_delete button button_red" id="button_delete_${data.article.id}" onclick="deletePostById(this)" value="${data.article.id}">Eliminar</button>
             </div>`;
-            new_article.innerHTML += `${buttons_html} </div>`;
         }
-
+         
         // agregar al html
-        articles_list.appendChild(new_article);
+        articles_list.insertAdjacentElement('afterbegin', new_article);
         formModal.reset();
     }
 }
@@ -155,6 +165,7 @@ function addEntry(data) {
         document.querySelector('.image-article').src = `${BASE_URL}uploads/images/${data.editEntry.imagen}`;
         document.querySelector('.title-blog').innerHTML = data.editEntry.titulo;
         document.querySelector('.paragraph-blog').innerHTML = data.editEntry.contenido;
+        document.querySelector('.date_email').innerHTML = `Usuario: ${data.editEntry.email_usuario}`;
     
         // formModal.reset();        
     }
@@ -165,15 +176,18 @@ formModal.addEventListener('submit', function (e) {
     e.preventDefault();
     let modalData = new FormData(formModal);
     let url_send = '';
+    let url_edit = false;
 
-    if (validateInputs()){
+    
+    if (!isNaN(button_modal.value)) {
+        url_send = `${BASE_URL}api/article/edit/${button_modal.value}`;
+        url_edit = true;
+    } else {
+        url_send = `${BASE_URL}api/article/addArticle`;
+    }
 
-        if (!isNaN(button_modal.value)) {
-            url_send = `${BASE_URL}api/article/edit/${button_modal.value}`;
-        } else {
-            url_send = `${BASE_URL}api/article/addArticle`;
-        }
-
+    if (validateInputs(url_edit)){
+    
         fetch(url_send, {
             method: 'POST',
             body: modalData
@@ -204,6 +218,10 @@ formModal.addEventListener('submit', function (e) {
             </div>
         `;
     }
+
+    setTimeout( () => {
+        response_modal.remove();
+    }, 4000);
 
 });
 
