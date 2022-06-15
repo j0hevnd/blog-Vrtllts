@@ -4,3 +4,4 @@
 
 -- Descomentar las líneas 12 y 13 de UserController para crear el usuario administrador
 
+-- En database/consultas/scripts.sql esta el archivo con las consultas sql.
