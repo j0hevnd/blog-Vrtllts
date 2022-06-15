@@ -22,6 +22,25 @@ let typewrite = str => {
 
 typewrite(title_hero);
 
+
+const BASE_URL = 'http://localhost/prueba-virtualLlantas/blog-Vrtllts/';
+let buttonEdit = document.querySelectorAll('.button_edit');
+let articles_list = document.getElementById('articles_list');
+// modal
+let modal = document.querySelector('.modal');
+let formModal = document.getElementById('form_modal');
+let title_modal = document.querySelector('.title_modal');
+let response_modal = document.getElementById('response');
+let button_modal = document.querySelector('.button_modal');
+// campos del modal
+let title_input = document.getElementById('title');
+let email_input = document.getElementById('email');
+let image_file  = document.getElementById('image');
+let content_input = document.getElementById('content');
+
+
+// utilidades
+
 // Modal
 
 /* Abrir el modal y hacer scroll haci arriba */
@@ -38,20 +57,14 @@ function openModal() {
 
 function modalClose() {
     modal.style.display = 'none';
+    response_modal.innerHTML = "";
+    title_input.style.removeProperty('box-shadow');
+    email_input.style.removeProperty('box-shadow');
+    image_file.style.removeProperty('box-shadow');
+    content_input.style.removeProperty('box-shadow');
 };
 
 
-const BASE_URL = 'http://localhost/prueba-virtualLlantas/blog-Vrtllts/';
-let modal = document.querySelector('.modal');
-let formModal = document.getElementById('form_modal');
-let buttonEdit = document.querySelectorAll('.button_edit');
-let response_modal = document.getElementById('response');
-let articles_list = document.getElementById('articles_list');
-let title_modal = document.querySelector('.title_modal');
-let button_modal = document.querySelector('.button_modal');
-
-
-// utilidades
 function openAdd() {
     button_modal.setAttribute('value', 'add');
     document.querySelector('.title_modal').innerHTML = 'Ingresa una nueva entrada';
@@ -65,10 +78,6 @@ function openAdd() {
  */
 function validateInputs(url_edit) {
     let flag = true;
-    let title_input = document.getElementById('title');
-    let email_input = document.getElementById('email');
-    let image_file  = document.getElementById('image');
-    let content_input = document.getElementById('content');
     emailRegex = /^(.+)@(.+)\.(.+){1,3}$/;
     
     if (!title_input.value.trim || title_input.value == '') {
@@ -219,9 +228,9 @@ formModal.addEventListener('submit', function (e) {
         `;
     }
 
-    setTimeout( () => {
-        response_modal.innerHTML = "";
-    }, 4000);
+    // setTimeout( () => {
+    //     response_modal.innerHTML = "";
+    // }, 4000);
 
 });
 
