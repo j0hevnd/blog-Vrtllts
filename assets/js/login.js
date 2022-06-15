@@ -23,7 +23,7 @@ formLogin.addEventListener('submit', function (e) {
             `;
             setTimeout( () => {
                 location.href = BASE_URL;
-            }, 5000);
+            }, 2000);
         } else {
             response.innerHTML = `
                 <div class="alert-error">

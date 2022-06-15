@@ -61,27 +61,28 @@ function addEntry(data) {
             ${data.msg}
         </div>
     `;
+    if (data.editEntry instanceof Object) {
+        // construir etiqueta
+        let new_article = document.createElement('article');
+        new_article.className = "container entry-blog";
+        new_article.id = `entry_blog_${data.article.id}`;
 
-    // construir etiqueta
-    let new_article = document.createElement('article');
-    new_article.className = "container entry-blog";
-    new_article.id = `entry_blog_${data.article.id}`;
-
-    //  contruir HTML
-    new_article.innerHTML = `
-        <div class="content-blog">
-            <img src="${BASE_URL}uploads/images/${data.article.imagen}" class="image-article" alt="imagen">
-            <div class="card">
-                <h2 class="title-blog">${data.article.titulo}</h2>
-                <p class="paragraph-blog">${data.article.contenido}</p>
-                <p class="date">Publicado: ${data.article.fecha}></p>
+        //  contruir HTML
+        new_article.innerHTML = `
+            <div class="content-blog">
+                <img src="${BASE_URL}uploads/images/${data.article.imagen}" class="image-article" alt="imagen">
+                <div class="card">
+                    <h2 class="title-blog">${data.article.titulo}</h2>
+                    <p class="paragraph-blog">${data.article.contenido}</p>
+                    <p class="date">Publicado: ${data.article.fecha}></p>
+                </div>
             </div>
-        </div>
-    `;
+        `;
 
-    // agregar al html
-    articles_list.appendChild(new_article);
-    formModal.reset();  
+        // agregar al html
+        articles_list.appendChild(new_article);
+        formModal.reset();
+    }
 }
 
 /**
@@ -90,15 +91,17 @@ function addEntry(data) {
  function editEntry(data) {
     response_modal.innerHTML = `
         <div class="alert-succes">
-            Actualizado correctamente
+            ${data.msg}
         </div>
     `;
-
-    document.querySelector('.image-article').src = `${BASE_URL}uploads/images/${data.editEntry.imagen}`;
-    document.querySelector('.title-blog').innerHTML = data.editEntry.titulo;
-    document.querySelector('.paragraph-blog').innerHTML = data.editEntry.contenido;
-
-    formModal.reset();
+    if (data.editEntry instanceof Object) {
+        document.querySelector('.title_modal').innerHTML = `Editar: ${data.editEntry.titulo}`;
+        document.querySelector('.image-article').src = `${BASE_URL}uploads/images/${data.editEntry.imagen}`;
+        document.querySelector('.title-blog').innerHTML = data.editEntry.titulo;
+        document.querySelector('.paragraph-blog').innerHTML = data.editEntry.contenido;
+    
+        // formModal.reset();        
+    }
 }
 
 
@@ -167,7 +170,9 @@ function findPostById(element){
     openModal();
 }
 
-
+/**
+ * Eliminar un elemento y removerlo del HTML
+ */
 function deletePostById(element){
     let id = element.value;
     let label = document.getElementById(element.id).parentElement.parentElement.parentElement.parentElement.id;
