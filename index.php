@@ -24,11 +24,11 @@ function showError404() {
 
 if (!empty($basename_url)) {
     if (in_array('api', $basename_url)) {
-        $get_controller = $basename_url[1];
-        $get_action = $basename_url[2];
+        $get_controller = isset($basename_url[1]) ? $basename_url[1] : null;;
+        $get_action = isset($basename_url[2]) ? $basename_url[2] : null;
     } else {
-        $get_controller = $basename_url[0];
-        $get_action = $basename_url[1];
+        $get_controller = isset($basename_url[0]) ? $basename_url[0] : null;
+        $get_action = isset($basename_url[1]) ? $basename_url[1] : null;
     }
 }
 // var_dump($basename_url);
