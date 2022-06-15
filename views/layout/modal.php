@@ -1,3 +1,7 @@
+<?php  
+require_once "utils/recaptchalib.php";
+?>
+    <script src="https://www.google.com/recaptcha/api.js?hl=es" async defer></script> 
     <div class="modal">
     <div class="modal-container" id="modal_container">
         <div class="nothing">
@@ -25,6 +29,7 @@
                     <textarea name="content" class="content" cols="88" rows="10"
                         placeholder="Ingresa el contenido de tu entrada"><?=isset($article_edit) && is_object($article_edit)?$article_edit->contenido:''?></textarea>
                 </div>
+                <div class="g-recaptcha" data-sitekey="6LcLyG4gAAAAAL8IwDW_4kOzP0WXLmU-wQjxYjTf"></div>
                 <button class="button button_green button_modal">Agregar</button> 
             </form>
         </div>
